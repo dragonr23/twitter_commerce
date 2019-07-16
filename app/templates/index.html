@@ -1,10 +1,45 @@
 {% extends 'base.html' %}
 
-{% block title %}
-{{ super() }} - Home
-{% endblock %}
+
 
 {% block app_content %}
-  <h1>Home</h1>
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>{{ title }}</h1>
+  </div>
+</div><!-- ends row -->
+
+<div class="row">
+  <div class="col-md-12">
+    <img src="http://placehold.it/800x150" alt="Placeholder" class="banner">
+  </div>
+</div><!-- ends row for banner -->
+
+
+<!-- loop through products and add each card -->
+
+{% for product in products %}
+
+  {% if loop.index == 1 or loop.index % 3 == 1 %}
+
+  <div class="row">
+
+  {% endif %}
+    <div class="col-md-4">
+      <div class="card">
+        <img src="http://placehold.it/250x250" alt="Placeholder" class="card-img">
+        <div class="card-title">{{product.title}} - {{ loop.index }}</div>
+        <div class="card-subtitle">${{product.price}}</div>
+        <div class="card-text">
+          <p>{{product.desc}}</p>
+        </div>
+        <button onclick="alert(1001)"class="btn btn-primary">Add to Cart</button>
+      </div> <!--ends card-->
+    </div> <!--emds col 4 for card -->
+  {% if loop.index %3 == 0 %}
+  </div><!-- ends row for cards -->
+  {% endif %}
+{% endfor %}
 
 {% endblock %}

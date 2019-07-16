@@ -2,7 +2,7 @@
 
 
 {% block title %}
-Flask Bootstrap
+Twitter Commerce - {{ title }}
 {% endblock %}
 
 {% block styles %}
@@ -15,21 +15,71 @@ Flask Bootstrap
 {% endblock %}
 
 {% block navbar %}
-<nav>
-  <ul>
-    <li><a href="{{ url_for('index') }}">Home</a></li>
-  </ul>
+
+<div class="row">
+  <div class="col-md-12">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="{{ url_for('index')}}">Twitter</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+
+    {% if title == 'Home'%}
+      <li class="nav-item active">
+    {% else %}
+      <li class="nav-item">
+    {% endif %}
+
+        <a class="nav-link" href="{{ url_for('index')}}">Home <span class="sr-only">(current)</span></a>
+      </li>
+
+      {% if title == 'Checkout'%}
+        <li class="nav-item active">
+      {% else %}
+      <li class="nav-item">
+      {% endif %}
+
+        <a class="nav-link" href="{{ url_for('checkout')}}">Checkout</a>
+      </li>
+
+      {% if title == 'Change Title'%}
+        <li class="nav-item active">
+      {% else %}
+      <li class="nav-item">
+      {% endif %}
+
+        <a class="nav-link" href="#">Title</a>
+      </li>
+    </ul>
+  </div>
 </nav>
+  </div> <!-- ends col 12 for nav -->
+</div> <!-- ends row for row -->
+
 {% endblock %}
 
 {% block content %}
 
+<main>
 
+<div class="container">
   {% block app_content%}{% endblock%}
-
-
-  <footer>
-    <p>This is a footer.</p>
-  </footer>
-
+</div>
+</main>
+<footer>
+  <div class="row">
+    <div class="col-md-4">
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+    <div class="col-md-4">
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+    <div class="col-md-4">
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+  </div>
+</footer>
 {% endblock %}
