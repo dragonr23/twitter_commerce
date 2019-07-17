@@ -28,3 +28,7 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Re-type Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
+
+class PostForm(FlaskForm):
+    tweet = StringField('What are you up to?', validators=[DataRequired()])
+    submit = SubmitField('Tweet')

@@ -1,0 +1,40 @@
+{% import 'bootstrap/wtf.html' as wtf %}
+{% extends 'base.html' %}
+
+
+
+{% block app_content %}
+
+<div class="row">
+  <div class="col-md-4">
+    <!-- .card>img.card-img+.card-title+.card-text+button.btn.btn-primary -->
+    <div class="card">
+      <img src="http://placehold.it/250x250" alt="Placeholder" class="card-img">
+      <div class="card-title">Max Smith</div>
+      <div class="card-subtitle">@maxsmith</div>
+      <div class="card-text profile_text">
+          <p>moremLorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi enim dolor alias accusamus, cum, odit hic, dignissimos doloribus sapiente aut cumque expedita dolorum consectetur vel, iusto esse laborum. Repellendus, cum!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti iste doloribus natus odio, qui, cupiditate nobis fuga ipsam atque dolorem omnis numquam ab? Quibusdam ad, repudiandae fugit praesentium eveniet error.</p>
+      </div>
+      <button class="btn btn-primary">Follow</button>
+    </div>
+
+  </div> <!-- end  first col -->
+  <div class="col-md-8">
+
+    <div class="card">
+      {{ wtf.quick_form(form) }}
+    </div>
+
+    <!-- .card>img.post-img+.card-title+.card-subtitle+.card-subtitle -->
+    {% for post in posts[::-1] %}
+      <div class="card small-margin">
+        <img src="http://placehold.it/25x25" alt="Profile Pic" class="post-img">
+        <div class="card-title tweet">{{ post.tweet }}</div>
+        <div class="card-subtitle date">{{ post.date_posted }}</div>
+        <div class="card-subtitle handle">@maxsmith</div>
+      </div>
+    {% endfor %}
+  </div><!-- ends call 8 for post section -->
+</div> <!--ends the first row-->
+
+{% endblock %}
