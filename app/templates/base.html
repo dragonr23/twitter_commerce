@@ -45,23 +45,33 @@ Twitter Commerce - {{ title }}
         <a class="nav-link" href="{{ url_for('checkout')}}">Checkout</a>
       </li>
 
-      {% if title == 'Profile'%}
-        <li class="nav-item active">
+      <!-- if user logged out hide profile and logout -->
+
+      {% if current_user.is_authenticated %}
+        {% if title == 'Profile'%}
+          <li class="nav-item active">
+        {% else %}
+        <li class="nav-item">
+        {% endif %}
+
+          <a class="nav-link" href="{{ url_for('profile', username=current_user.username)}}">Profile</a>
+        </li>
+
+        <li class="nav-item">
+
+        <a class="nav-link" href="{{ url_for('logout')}}">Logout</a>
+        </li>
       {% else %}
-      <li class="nav-item">
-      {% endif %}
 
-        <a class="nav-link" href="{{ url_for('profile')}}">Profile</a>
-      </li>
 
-      {% if title == 'Login'%}
-        <li class="nav-item active">
-      {% else %}
-      <li class="nav-item">
-      {% endif %}
+        {% if title == 'Login'%}
+          <li class="nav-item active">
+        {% else %}
+        <li class="nav-item">
+        {% endif %}
 
-        <a class="nav-link" href="{{ url_for('login')}}">Login</a>
-      </li>
+          <a class="nav-link" href="{{ url_for('login')}}">Login</a>
+        </li>
 
       {% if title == 'Register'%}
         <li class="nav-item active">
@@ -71,6 +81,8 @@ Twitter Commerce - {{ title }}
 
         <a class="nav-link" href="{{ url_for('register')}}">Register</a>
       </li>
+
+    {% endif %}
 
 
       {% if title == 'Contact Us'%}

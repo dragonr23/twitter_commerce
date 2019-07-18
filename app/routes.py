@@ -1,7 +1,8 @@
 from app import app, db
 from flask import render_template, url_for, redirect, flash
 from app.forms import TitleForm, ContactForm, LoginForm, RegisterForm, PostForm
-from app.models import Post, Contact
+from app.models import Post, Contact, User
+from flask_login import current_user, login_user, logout_user, login_required
 
 
 @app.route('/')
@@ -56,20 +57,70 @@ def title():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+
+
+    if current_user.is_authenticated:
+        flash('You are already logged in.')
+        return redirect(url_for('index'))
+
+
     form = LoginForm()
 
     if form.validate_on_submit():
 
+        #query the database for the user trying to login
+
+        user = User.query.filter_by(email=form.email.data).first()
+
+        #if user doesn't exist, reload page and flash message
+
+        if user is None or not user.check_password(form.password.data):
+            flash('Credentials are incorrect')
+            return redirect(url_for('login'))
+
+        #if user does exist and the credentials are correct, log them in and send them to their profile page
+
+        login_user(user, remember=form.remember_me.data)
+
         flash("You are logged in.")
-        return redirect(url_for('profile'))
+        return redirect(url_for('profile',username=current_user.username))
 
     return render_template('form.html', form=form, title='Login')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+
+
+    #check if user is already logged in
+
+    if current_user.is_authenticated:
+        flash('You are already logged in.')
+        return redirect(url_for('index'))
+
     form = RegisterForm()
 
+
+
     if form.validate_on_submit():
+
+        user =User(
+            first_name = form.first_name.data,
+            last_name = form.last_name.data,
+            username = form.username.data,
+            email = form.email.data,
+            url = form.url.data,
+            age = form.age.data,
+            bio = form.bio.data
+        )
+
+        #set the password password_hash
+
+        user.set_password(form.password.data)
+
+        #add to stage and commit
+
+        db.session.add(user)
+        db.session.commit()
 
         flash("Thanks for registering.")
         return redirect(url_for('login'))
@@ -123,14 +174,16 @@ def contact():
 #         'date_posted': '7/17/2019'
 #     }
 # ]
-@app.route('/profile', methods=['GET', 'POST'])
-def profile():
+@login_required
+@app.route('/profile/<username>', methods=['GET', 'POST'])
+def profile(username):
     form = PostForm()
 
     if form.validate_on_submit():
         #step 1: Create an instance of the db model
         post = Post(
-            tweet = form.tweet.data
+            tweet = form.tweet.data,
+            user_id = current_user.id
         )
         #add record
         db.session.add(post)
@@ -138,9 +191,16 @@ def profile():
         db.session.commit()
 
 
-        return redirect(url_for('profile'))
+        return redirect(url_for('profile',username=username))
 
     #retrieve all posts and pass in to view
 
-    posts = Post.query.all()
-    return render_template('profile.html', form=form,posts=posts, title='Profile')
+    #pass in user via the username taken in
+
+    user = User.query.filter_by(username=username).first()
+    return render_template('profile.html', form=form,user=user, title='Profile')
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
