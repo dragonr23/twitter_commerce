@@ -38,7 +38,7 @@ class Contact(db.Model):
     contact_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     email = db.Column(db.String(50))
-    message = db.Column(db.String(1000))
+    message = db.Column(db.String(500))
     date_posted = db.Column(db.DateTime, default=datetime.now().date())
 
 #add user loader, when you call login_user this is how it finds the correct user to login_user
