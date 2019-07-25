@@ -16,4 +16,4 @@ class Config():
 
 # 'postgresql://name_of_user:pass_for-user@domanin_address:port/name_of_db'
 
-    SQLALCHEMY_DATABASE_URI = os.environ.get('SECRET_KEY') or 'postgresql://postgres:0ceanP@rk@localhost:5432/twitter_commerce'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://postgres:0ceanP@rk@localhost:5432/twitter_commerce'
