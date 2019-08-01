@@ -1,8 +1,9 @@
 from app import app, db
-from flask import render_template, url_for, redirect, flash
+from flask import render_template, url_for, redirect, flash, jsonify, request
 from app.forms import TitleForm, ContactForm, LoginForm, RegisterForm, PostForm
 from app.models import Post, Contact, User
 from flask_login import current_user, login_user, logout_user, login_required
+import requests
 
 
 @app.route('/')
@@ -204,3 +205,73 @@ def profile(username):
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+
+# /*
+# ================================================================================
+# # API'S
+# ================================================================================
+#     */
+
+@app.route('/api/posts/retrieve', methods=['GET'])
+def getPosts():
+    try:
+        username = request.args.get('username')
+
+        #queery the database for the  tweets by a user
+
+        user=User.query.filter_by(username=username).first()
+
+        #traverse through user posts and into new list, the user.posts attribute is actually a class
+
+        data = []
+
+        for post in user.posts:
+            data.append(
+                {
+                'post_id': post.post_id,
+                'user_id': post.user_id,
+                'tweet': post.tweet,
+                'date_posted': post.date_posted
+                }
+            )
+
+
+        return jsonify({ 'sucess' : f'Query successful for {username}',
+                        'username': username,
+                         'posts': data
+        })
+
+    except:
+        return jsonify({'error' : 'Error #001: invalid parameters' })
+
+@app.route('/api/posts/save', methods=['POST'])
+def savePost():
+    #grab parameters for posing
+
+    username = request.args.get('username')
+    tweet = request.args.get('tweet')
+
+    #query the user table, if user doesnt exist return Error
+
+    user = User.query.filter_by(username=username).first()
+
+    if not user:
+        return jsonify({'error' : 'Error #002: Invalid Parameters'})
+
+    post = Post(user_id=user.id, tweet=tweet)
+
+    db.session.add(post)
+    db.session.commit()
+
+    return jsonify({
+        'success': 'Tweet posted.',
+        'username': user.username,
+        'post_data': {
+            'post_id': post.post_id,
+            'user_id': post.user_id,
+            'tweet': post.tweet,
+            'date_posted': post.date_posted
+
+        }
+    })
